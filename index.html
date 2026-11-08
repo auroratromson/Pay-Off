@@ -229,7 +229,7 @@ dialog .row{display:flex;justify-content:space-between;align-items:center;margin
 <script>
 /* © 2026 JcPalacios. Todos los derechos reservados. / All rights reserved. */
 var T={
- es:{title:"Saldar – deudas que alguien puede pagar",copy:"© 2026 JcPalacios. Todos los derechos reservados.",sTotal:"saldado hasta ahora",sHelp:"deudas con ayuda",contact:"Creador y contacto:",bkDebt:"A la deuda (va al acreedor)",bkFee:"Comisión Saldar",bkProc:"Costes de pago",bkTot:"Total a pagar",bkNote:"Cubres los costes de pago para que el acreedor reciba la cantidad completa. Cálculo estimado con tarjeta europea.",home:"Inicio",howT:"Cómo funciona",how1:"1. Publica tu deuda con su justificante.",how2:"2. La revisamos y la marcamos como verificada.",how3:"3. Alguien paga al acreedor, directamente.",shT:"Compartir deuda",shPub:"¡Deuda publicada! Compártela:",shSub:"Cuanta más gente la vea, más fácil es que alguien ayude.",shX:"Publicar en X",shIG:"Publicar en Instagram",shCopy:"Copiar texto",fShX:"Publicar también en X",fShIG:"Publicar también en Instagram",close:"Cerrar",copied:"Texto copiado",igCopied:"Texto copiado. Pégalo en Instagram.",
+ es:{title:"Saldar – deudas que alguien puede pagar",copy:"© 2026 JcPalacios. Todos los derechos reservados.",sTotal:"saldado hasta ahora",sHelp:"deudas con ayuda",tOff:"Publicada solo en este dispositivo: no se pudo conectar con el servidor.",contact:"Creador y contacto:",bkDebt:"A la deuda (va al acreedor)",bkFee:"Comisión Saldar",bkProc:"Costes de pago",bkTot:"Total a pagar",bkNote:"Cubres los costes de pago para que el acreedor reciba la cantidad completa. Cálculo estimado con tarjeta europea.",home:"Inicio",howT:"Cómo funciona",how1:"1. Publica tu deuda con su justificante.",how2:"2. La revisamos y la marcamos como verificada.",how3:"3. Alguien paga al acreedor, directamente.",shT:"Compartir deuda",shPub:"¡Deuda publicada! Compártela:",shSub:"Cuanta más gente la vea, más fácil es que alguien ayude.",shX:"Publicar en X",shIG:"Publicar en Instagram",shCopy:"Copiar texto",fShX:"Publicar también en X",fShIG:"Publicar también en Instagram",close:"Cerrar",copied:"Texto copiado",igCopied:"Texto copiado. Pégalo en Instagram.",
   tab2:"Publicar deuda",all:"Todas",
   fAlias:"Alias (no uses tu nombre real)",phAlias:"Ej.: Gato Cansado",fCat:"Categoría",fCred:"¿A quién se debe?",phCred:"Ej.: Hospital, casero, banco",
   fAmt:"Importe (€)",fStory:"Tu historia",phStory:"Cuenta en pocas líneas cómo llegaste aquí.",fDoc:"Justificante (factura o extracto)",
@@ -240,7 +240,7 @@ var T={
   dTitle:"Ayudar a ",dSub1:"Pendiente: ",dSub2:". El pago iría a: ",dHow:"¿Cuánto quieres pagar? (€)",dCancel:"Cancelar",dPay:"Pagar",dAll:"Todo: ",
   tPub:"Tu deuda se ha publicado. Pendiente de verificar.",tDone:"¡Deuda saldada! Gracias.",tPaid1:"Pago de ",tPaid2:" realizado (simulado)",
   cats:{health:"Salud",housing:"Vivienda",studies:"Estudios",family:"Familia",business:"Negocio",other:"Otras"}},
- en:{title:"Saldar – debts someone can pay",copy:"© 2026 JcPalacios. All rights reserved.",sTotal:"settled so far",sHelp:"debts helped",contact:"Creator and contact:",bkDebt:"To the debt (goes to the creditor)",bkFee:"Saldar fee",bkProc:"Payment processing costs",bkTot:"Total to pay",bkNote:"You cover the payment processing costs so the creditor receives the full amount. Estimated for a European card.",home:"Home",howT:"How it works",how1:"1. Post your debt with proof.",how2:"2. We review it and mark it as verified.",how3:"3. Someone pays the creditor directly.",shT:"Share debt",shPub:"Debt posted! Share it:",shSub:"The more people see it, the easier it is for someone to help.",shX:"Post on X",shIG:"Post on Instagram",shCopy:"Copy text",fShX:"Also post on X",fShIG:"Also post on Instagram",close:"Close",copied:"Text copied",igCopied:"Text copied. Paste it in Instagram.",
+ en:{title:"Saldar – debts someone can pay",copy:"© 2026 JcPalacios. All rights reserved.",sTotal:"settled so far",sHelp:"debts helped",tOff:"Posted only on this device: couldn’t reach the server.",contact:"Creator and contact:",bkDebt:"To the debt (goes to the creditor)",bkFee:"Saldar fee",bkProc:"Payment processing costs",bkTot:"Total to pay",bkNote:"You cover the payment processing costs so the creditor receives the full amount. Estimated for a European card.",home:"Home",howT:"How it works",how1:"1. Post your debt with proof.",how2:"2. We review it and mark it as verified.",how3:"3. Someone pays the creditor directly.",shT:"Share debt",shPub:"Debt posted! Share it:",shSub:"The more people see it, the easier it is for someone to help.",shX:"Post on X",shIG:"Post on Instagram",shCopy:"Copy text",fShX:"Also post on X",fShIG:"Also post on Instagram",close:"Close",copied:"Text copied",igCopied:"Text copied. Paste it in Instagram.",
   tab2:"Post a debt",all:"All",
   fAlias:"Alias (don’t use your real name)",phAlias:"E.g.: Tired Cat",fCat:"Category",fCred:"Who is it owed to?",phCred:"E.g.: Hospital, landlord, bank",
   fAmt:"Amount (€)",fStory:"Your story",phStory:"Tell us in a few lines how you got here.",fDoc:"Proof (invoice or statement)",
@@ -323,6 +323,29 @@ function openShare(id,pre){
   $("#sdlg").showModal();
 }
 $("#s-close").onclick=function(){$("#sdlg").close()};
+/* Supabase (claves públicas; la seguridad la dan las reglas RLS de la base de datos) */
+var SB_URL="https://ygxpjevdmxvypbhnrhir.supabase.co";
+var SB_KEY="sb_publishable_peBRhjUQ51Iha-bRyjN1vg_r4CjuaHe";
+var usingDemo=true;
+function sb(path,opt){
+  opt=opt||{};
+  return fetch(SB_URL+"/rest/v1/"+path,{method:opt.method||"GET",body:opt.body,headers:{apikey:SB_KEY,"Content-Type":"application/json",Prefer:"return=representation"}})
+    .then(function(r){if(!r.ok)throw new Error(r.status);return r.json()});
+}
+function fromRow(r){
+  return {id:r.id,ago:Math.max(0,Math.round((Date.now()-new Date(r.created_at))/60000)),alias:r.alias,cat:r.category,cred:r.creditor,
+    amt:r.amount,paid:r.paid,ver:r.status==="verified",story:r.story};
+}
+function loadDebts(){
+  sb("debts?select=*&order=created_at.desc").then(function(rows){
+    if(rows.length){
+      debts=rows.map(fromRow);usingDemo=false;
+      nextId=Math.max.apply(null,debts.map(function(d){return d.id}))+1;
+      renderList();
+      if(/^#d\d+$/.test(location.hash)){var e1=document.getElementById(location.hash.slice(1));if(e1)e1.scrollIntoView()}
+    }
+  }).catch(function(){});
+}
 function setStat(sel,key,to,fmt){
   var el=$(sel), from=shown[key]; shown[key]=to;
   if(reduced||from===to){el.textContent=fmt(to);return}
@@ -408,12 +431,18 @@ function toast(m){
 }
 $("#form").onsubmit=function(ev){
   ev.preventDefault();
-  debts.unshift({id:nextId++,ago:0,alias:$("#f-alias").value.trim(),cat:$("#f-cat").value,cred:$("#f-cred").value.trim(),
-    amt:Math.floor(+$("#f-amt").value),paid:0,ver:false,story:$("#f-story").value.trim()});
-  var nd=debts[0], wx=$("#c-x").checked, wig=$("#c-ig").checked;
-  $("#form").reset(); filter="all"; renderChips(); renderList(); show("feed");
-  toast(t("tPub"));
-  if(wx||wig)openShare(nd.id,{x:wx,ig:wig});
+  var row={alias:$("#f-alias").value.trim(),category:$("#f-cat").value,creditor:$("#f-cred").value.trim(),
+    amount:Math.floor(+$("#f-amt").value),story:$("#f-story").value.trim(),lang:lang};
+  var wx=$("#c-x").checked, wig=$("#c-ig").checked;
+  sb("debts",{method:"POST",body:JSON.stringify([row])}).then(function(r){return fromRow(r[0])}).catch(function(){
+    return {id:nextId++,ago:0,alias:row.alias,cat:row.category,cred:row.creditor,amt:row.amount,paid:0,ver:false,story:row.story,local:true};
+  }).then(function(nd){
+    if(usingDemo){debts=[];usingDemo=false}
+    debts.unshift(nd);
+    $("#form").reset(); filter="all"; renderChips(); renderList(); show("feed");
+    toast(nd.local?t("tOff"):t("tPub"));
+    if(wx||wig)openShare(nd.id,{x:wx,ig:wig});
+  });
 };
 function show(w){
   view=w;
@@ -426,6 +455,7 @@ $("#fab").onclick=function(){show("publish")}; $("#back").onclick=function(){sho
 $("#s-pub").onclick=function(){show("publish")}; $("#s-home").onclick=function(){show("feed")};
 applyLang();
 if(/^#d\d+$/.test(location.hash)){var e0=document.getElementById(location.hash.slice(1));if(e0)e0.scrollIntoView()}
+loadDebts();
 </script>
 </body>
 </html>
